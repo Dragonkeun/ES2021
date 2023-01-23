@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배열과 객체</title>
+</head>
+<body>
+    <script>
+        // 배열(array), index로 접근하고 이름이 없음. 모두 같은 특징을 가지고 있어야 사용하기 편리
+        const array = ['HTML', 'CSS', 'JavaScript', 'React'];
+
+        // 객체(object), 이름으로 접근 함. man.name 이나 man[name]으로 접근
+        // 'test'는 반드시 man['test'] 로 접근해야 함 대괄호로 접근 해야 함
+        // 없는 속성애 접근하면 undefined
+        const man = {
+            name : 'YK',
+            age : 24,
+            face : 'ugly',
+            'test' : 'te te test'
+        }
+        man.friend = '친구 이름'; //추가
+        man.age = 25; //수정
+    </script>
+</body>
+</html>
