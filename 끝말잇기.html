@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>끝말잇기</title>
+</head>
+
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어 : <span id="word"></span></div>
+    <input type="text">
+    <button>입력</button>
+    <script>
+        const number = parseInt(prompt("몇 명이 참가하나요?"), 10);
+        const $input = document.querySelector('input');
+        const $button = document.querySelector('button');
+        const $word = document.querySelector('#word');
+        const $order = document.querySelector('#order');
+        let word; //제시어
+        let newWord; //새로 입력한 단어
+        const onClickButton = () => {
+            if (!word || word[word.length - 1] === newWord[0]) { //제시어가 비어있거나(첫 번째 사람인지 판단), 현재 제시어의 마지막 글자와 새로운 단어의 첫 글자가 같다면
+                word = newWord; //입력한 단어가 제시어가 된다
+                $word.textContent = word; //해당 제시어를 제시어칸에 채워줌
+                $input.value = ''; //하나 입력했으니 입력창은 비워줌
+                $input.focus(); //커서가 $input에 가도록
+                const order = Number($order.textContent); //현재 몇 번째 참가자인지 order에 저장
+                if (order === number) { //현재 참가자의 번호가 전체 참가자랑 같은가, 3명이 참가하는데 지금 3번 참가자인가, 마지막 참가자인가
+                    $order.textContent = 1; //마지막 참가자이므로 다음 참가자는 1번 참가자가 됨
+                }
+                else {
+                    $order.textContent = order + 1; //마지막 참가자가 아니므로 다음 참가자는 현재 참가자 + 1 이 됨
+                }
+            }
+            else { //제시어의 마지막자리와 새로 입력한 단어의 첫자리가 같지 않다면, 올바른 단어를 입력하지 않았다면
+                alert("올바르지 않은 단어입니다");
+            }
+        }
+        const onInput = (event) => {
+            newWord = event.target.value; //현재 input창에 입력된 내용이 newWord가 됨, 계속 갱신
+        }
+        $input.addEventListener("input", onInput);
+        $button.addEventListener("click", onClickButton);
+        // 해당 태그들의 내부 값을 가져올 때 사용해야 하는 속성
+        // 태그.속성
+        // input.value;
+        // button.textContent;
+        // select.value;
+        // div.textContent;
+        // textarea.value;
+        // span.textContent
+    </script>
+</body>
+
+</html>
