@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            /*border까지 포함하여 너비를 계산함*/
+        }
+
+        #operator {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            text-align: center;
+        }
+
+        #result {
+            width: 180px;
+            height: 50px;
+            margin: 5px;
+            text-align: right;
+        }
+
+        button {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+        }
+    </style>
+    <title>계산기</title>
+</head>
+
+<body>
+    <input readonly id="operator">
+    <input readonly type="number" id="result">
+    <div class="row">
+        <button id="num-7">7</button>
+        <button id="num-8">8</button>
+        <button id="num-9">9</button>
+        <button id="plus">+</button>
+    </div>
+    <div class="row">
+        <button id="num-4">4</button>
+        <button id="num-5">5</button>
+        <button id="num-6">6</button>
+        <button id="minus">-</button>
+    </div>
+    <div class="row">
+        <button id="num-1">1</button>
+        <button id="num-2">2</button>
+        <button id="num-3">3</button>
+        <button id="divide">/</button>
+    </div>
+    <div class="row">
+        <button id="clear">C</button>
+        <button id="num-0">0</button>
+        <button id="calculate">=</button>
+        <button id="multiply">*</button>
+    </div>
+    <script>
+        let numOne = '';
+        let operator = '';
+        let numTwo = '';
+        const $operator = document.querySelector("#operator");
+        const $result = document.querySelector("#result");
+        const onClickNumber = (event) => {
+            // if문 여러개가 중첩되면 이해가 어려울 수 있음
+            // if문 중첩을 줄이기 위해 짧은 if문을 위로 올리고 return 문장을 작성하여서 else문 하나를 생략함.
+            // 내가 해 본 결과 이게 더 어려운듯
+            if (!operator) { //연산자가 없으면
+                numOne += event.target.textContent; //첫 번째 값에 할당
+                $result.value += event.target.textContent; //결과값도 바꿔줌 화면 표시
+                return;
+            }
+            //아래 문장은 연산자가 있으면 실행됨, 위에 연산자가 없으면 return; 하도록 했기 때문
+            if (!numTwo) { //연산자가 있으면서, numTwo가 없을 때
+                $result.value = ''; //result 값을 비워줌. 3 + 까지만 하고 4를 입력하면 4는 새로운 칸에 입력되어야 하므로 그 전 값을 지워서 화면에 보여주는 것
+            }
+            numTwo += event.target.textContent; //두 번째 값에 할당 
+            $result.value += event.target.textContent; //결과값도 바꿔줌 화면 표시
+        }
+        const onClickOperator = (event) => {
+            if (numTwo) { //만약 +, - 이런 기호를 눌렀는데 numTwo가 있으면, 즉 3+4+5를 하면 +5를 할때는 numTwo도 있으므로 해당 코드 실행
+                switch (operator) { //operator에 따라 다른 수식
+                    case '+':
+                        $result.value = Number(numOne) + Number(numTwo);
+                        break;
+                    case '-':
+                        $result.value = Number(numOne) - Number(numTwo);
+                        break;
+                    case '*':
+                        $result.value = Number(numOne) * Number(numTwo);
+                        break;
+                    case '/':
+                        $result.value = Number(numOne) / Number(numTwo);
+                        break;
+                }
+            }
+            numOne = $result.value;
+            numTwo = '';
+            if (numOne) { //첫 번째 숫자가 있을때만 실행, 3이든 뭐든 있어야 +, -를 할 수 있을테니까
+                operator = event.target.textContent;
+                $operator.value = event.target.textContent;
+            }
+            else { //첫 번째 숫자가 없으면 0으로 간주함. 그냥 -3을 하면 0-3으로 간주하는 거임
+                numOne += '0';
+                $result.value += '0';
+                operator = event.target.textContent;
+                $operator.value = event.target.textContent;
+
+
+                
+            }
+        }
+        const onClickCalculate = () => {
+            if (numTwo) { //numTwo가 있는지? 3+4 등 이런 수식이 다 입력되었는지 확인
+                switch (operator) { //operator에 따라 다른 수식
+                    case '+':
+                        $result.value = Number(numOne) + Number(numTwo);
+                        break;
+                    case '-':
+                        $result.value = Number(numOne) - Number(numTwo);
+                        break;
+                    case '*':
+                        $result.value = Number(numOne) * Number(numTwo);
+                        break;
+                    case '/':
+                        $result.value = Number(numOne) / Number(numTwo);
+                        break;
+                }
+                // 2 + 3 + 4 를 하기 위한 코드
+                $operator.value = ''; // 연산자 화면에 보이는 값 지워주고
+                numOne = $result.value; // 현재까지 계산된 값(2 + 3)이 numOne에 들어감
+                operator = ''; // 연산자 값 지우고
+                numTwo = ''; // numTwo도 초기화
+            }
+            else {
+                alert("올바른 수식을 입력하세요");
+            }
+        }
+        const onClickClear = () => { //Clear 클릭 시 다 초기화
+            numOne = '';
+            operator = '';
+            numTwo = '';
+            $operator.value = '';
+            $result.value = '';
+        }
+        for (let i = 0; i <= 9; i++) {
+            document.querySelector(`#num-${i}`).addEventListener("click", onClickNumber);
+        }
+        document.querySelector("#plus").addEventListener('click', onClickOperator);
+        document.querySelector("#minus").addEventListener('click', onClickOperator);
+        document.querySelector("#divide").addEventListener('click', onClickOperator);
+        document.querySelector("#multiply").addEventListener('click', onClickOperator);
+        document.querySelector("#calculate").addEventListener('click', onClickCalculate);
+        document.querySelector("#clear").addEventListener('click', onClickClear);
+    </script>
+</body>
+
+</html>
