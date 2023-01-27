@@ -42,6 +42,7 @@
         <input type="text" id="input">
         <button>확인</button>
         <span>남은 기회 : <span id="chance">10</span></span>
+        <span>현재 아웃 카운트 : <span id="out">0</span></span>
     </form>
     <div id="logs"></div>
     <script>
@@ -49,10 +50,12 @@
         const $form = document.querySelector("#form");
         const $logs = document.querySelector("#logs");
         const $chance = document.querySelector("#chance");
+        const $out = document.querySelector("#out");
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         const answer = []; //정답
         const tries = []; //사용자가 시도한 값을 tries 배열에 저장함. 똑같은 숫자를 또 답으로 제출하는 상황 방지
         let chance = 10;
+        let out = 0; // out count, 3 out되면 패배
         for (let i = 0; i <= 3; i++) {
             const index = Math.floor(Math.random() * (9 - i));
             // index에는 0~8의 랜덤한 값이 들어감.
@@ -92,6 +95,7 @@
                     $logs.appendChild(message);
                     return;
                 }
+                //스트라이크, 볼 판단 코드
                 let strike = 0;
                 let ball = 0;
                 // answer = 3146, value = 1234
@@ -107,7 +111,19 @@
                     }
                 }
                 // 문자열에는 createTextNode 안하고 그냥 append 하면 된다고 합니다.
-                $logs.append(`${value} : ${strike} STRIKE ${ball} BALL`, document.createElement("br"));
+                if (strike === 0 && ball === 0) { //0볼 0스트라이크일 때, 완전 틀렸을 때는 OUT 이라고 표시
+                    $logs.append(`${value} : OUT !`, document.createElement("br"));
+                    out++; // out이 1 올라감
+                    $out.textContent = `${out} OUT`;
+                }
+                else { // OUT은 아닐 때, 1볼이라도 있을 때
+                    $logs.append(`${value} : ${strike} STRIKE ${ball} BALL`, document.createElement("br"));
+                }
+                if (out === 3) { // 3번 아웃됐는지 체크
+                    const message = document.createTextNode(`패배! 정답은 ${answer.join('')}`); // answer은 배열이므로 join을 이용해 배열을 풀어줌
+                    $logs.appendChild(message);
+                    return;
+                }
                 tries.push(value); //사용자가 한번 시도한 값을 tries 배열에 넣어줌
             }
         }
