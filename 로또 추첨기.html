@@ -6,6 +6,14 @@
     splice는 인수가 1번째는 시작배열, 2번째는 갯수로 slice랑 다름. 그리고 splice는 배열을 수정함. 새로운 배열을 만드는 것 아님
     slice는 잘라내는 것만 가능하고, 인수가 1번째는 시작배열, 2번째는 끝배열-1로 두 인수 모두 index에 관련됨. slice는 새로운 배열을 만듬. 기존의 배열은 안 건드림
   -->
+<!-- 
+    var vs. let
+    var는 함수 스코프를 가지기 때문에 함수 블록 안에 있는 부분은 밖에서 접근할 수 없다.
+    let은 블록 스코프를 가지기 때문에 블록 밖에서는 블록 안을 접근할 수 없다.
+    for문에서 var을 쓰면 원하는대로 실행 안되는 이유는 var로 하면 0~5면 순식간에 0~5를 거쳐 5로 바뀐 후에 모두 실행됨
+    let은 순식간에 0~5를 거쳐 5로 바뀌지만 블록 안에서는 0~5의 값을 콜백하여 실행하기 때문
+    헷갈리니까 for문에는 그냥 let을 쓰자.
+   -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,8 +38,8 @@
 </head>
 
 <body>
-    <div id="result">추첨 결과는 ?</div>
-    <div id="bonus">보너스 :</div>
+    <div id="result">추첨 결과는 ? </div>
+    <div id="bonus">보너스 : </div>
     <script>
         const candidate = Array(45).fill().map((v, i) => i + 1);
         // 45개의 방에 모두 undefined라는 값이 들어가 있도록 세팅하고,
@@ -49,7 +57,47 @@
         // ?.sort((a, b) => a[0].charCodeAt() - b[0].charCodeAt()); 이렇게 하면 영어 문자도 정렬 가능. charCodeAt으로 코드값으로 바꾼 후 정렬하는 것.
         // ?.sort((a, b) => a.localeCompare(b)); 이렇게 하면 한글 문자도 정렬 가능.
         const bonus = shuffle[6]; //6번 index에 있는 숫자는 7번째 숫자이고, 보너스 숫자가 됨
-        console.log(winBalls, bonus)
+        console.log(winBalls, bonus);
+        function colorize(number, $tag) {
+            // 10 미만이면 빨간색, 20 미만이면 주황색, 30 미만이면 노랑색, 40 미만이면 파란색, 40부터는 초록색
+            // 빨간색, 파란색, 초록색일 때는 글자가 하얗게
+            // 태그.style.CSS속성 = 값; 을 하면 태그에 CSS 속성이 적용 됨
+            if (number < 10) {
+                $tag.style.backgroundColor = "red";
+                $tag.style.colir = "white";
+            }
+            else if (number < 20) {
+                $tag.style.backgroundColor = "orange";
+            }
+            else if (number < 30) {
+                $tag.style.backgroundColor = "yellow";
+            }
+            else if (number < 40) {
+                $tag.style.backgroundColor = "blue";
+                $tag.style.color = "white";
+            }
+            else {
+                $tag.style.backgroundColor = "green";
+                $tag.style.color = "white";
+            }
+        }
+        const drawBall = (number, $parent) => {
+            const $ball = document.createElement("div"); //$ball에는 div태그를 만들고
+            $ball.className = "ball"; //class 이름 ball 추가하고(css를 위함)
+            $ball.textContent = number; //
+            colorize(number, $ball); //숫자에 따라 색칠해주는 함수 호출
+            $parent.appendChild($ball); //parent에 자식으로 추가, parent는 result임
+        }
+        for (let i = 0; i < winBalls.length; i++) {
+            setTimeout(() => {
+                const $result = document.querySelector("#result");
+                drawBall(winBalls[i], $result);
+            }, (i + 1) * 1000); //i가 0부터 시작하므로 +1한 후에 * 1000해서 ?초 뒤에 실행됨, 1초 2초 3초 4초 ... 
+        }
+        setTimeout(() => {
+            const $bonus = document.querySelector("#bonus");
+            drawBall(bonus, $bonus);
+        }, 7000); //7초 후에 실행
     </script>
 </body>
 
