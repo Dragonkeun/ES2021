@@ -69,6 +69,7 @@
         let startTime; //let으로 하고 밖에다가 선언 무조건 해야 하는 이유 : let을 if문 안에 하면 let은 블록 스코프이기 때문에 endTime - startTime 할 수가 없음 다른 블록에 있기 때문
         let endTime;
         const records = []; //반응속도 시간을 push해서 평균 반응속도를 계산할 것임
+        let timeoutId;
         // 태그.classList.add('클래스'); 추가하는 코드
         // 태그.classList.replace('기존클래스','수정클래스'); 수정하는 코드
         // 태그.classList.remove('클래스'); 제거하는 코드
@@ -76,7 +77,7 @@
             if (event.target.classList.contains('waiting')) { //파랑
                 $screen.classList.replace('waiting', 'ready'); //class waiting을 지우고 ready로 바꿈
                 $screen.textContent = '초록색이 되면 클릭하세요';
-                setTimeout(function () { //2~3초 후에 실행되는 코드
+                timeoutId = setTimeout(function () { //2~3초 후에 실행되는 코드, timeoutId를 줌으로써 사용자가 성급한 클릭을 했을 때 timeoutId를 이용해서 타이머 종료
                     startTime = new Date(); //현재 시간을 저장함. 게임 끝난 시간 - 현재 시간을 하면 얼마나 걸렸는지 알 수 있음. 이거로 반응속도 계산
                     $screen.classList.remove('ready'); //ready 지우고
                     $screen.classList.add('now'); //now 추가함
@@ -84,7 +85,10 @@
                 }, Math.floor(Math.random() * 1000) + 2000); //2초에서 3초 사이, 2000~3000 사이의 수
             }
             else if (event.target.classList.contains('ready')) { //빨강
-                alert('부정 출발');
+                clearTimeout(timeoutId);
+                $screen.classList.remove('ready');
+                $screen.classList.add('waiting');
+                $screen.textContent = '너무 성급하시군요';
             }
             else if (event.target.classList.contains('now')) { //초록
                 endTime = new Date(); //게임 끝난 시간을 저장함
