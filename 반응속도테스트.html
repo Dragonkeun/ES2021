@@ -28,6 +28,11 @@
     그 다음에는 c가 a[1]에 들어가므로 영희가 a[1]에 들어감
     반복.
     -->
+    <!-- 
+        debugger;
+        디버거를 쓰이는 순간 코드가 멈춰버리고 개발자 도구에 들어가보면 디버거 모드로 되어있음.
+        각각의 변수들의 값을 알 수 있음.
+     -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -98,6 +103,11 @@
                 $result.textContent = `현재:${current}초, 평균:${average}초`;
                 $screen.classList.remove('now'); //다시 게임 시작 상태로
                 $screen.classList.add('waiting'); //다시 게임 시작 상태로
+                const topFive = records.sort((p, c) => p - c).slice(0, 5); //상위 5개만 보여지게 하는 코드
+                topFive.forEach((item, index) => {
+                    $result.append(document.createElement('br'),
+                    `${index + 1}위 : ${item}초`);
+                })
             }
         })
     </script>
